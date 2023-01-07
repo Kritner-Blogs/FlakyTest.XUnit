@@ -9,7 +9,7 @@ namespace FlakyTest.XUnit.Tests.Unit.Attributes;
 /// </summary>
 public class FlakyFactAttributeTests
 {
-    private FlakyFactAttribute _sut;
+    private FlakyFactAttribute? _sut;
 
     private const string FlakyTestExplanation =
         "This test is flaky because of an unstable API... further investigation and fixing should be done in JIRA-1234";
