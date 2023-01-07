@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace FlakyTest.XUnit.Exceptions
 {
@@ -11,7 +11,7 @@ namespace FlakyTest.XUnit.Exceptions
 
         public InvalidNumberOfRetriesException() : base(ErrorMessage)
         {
-            
+
         }
     }
 }

@@ -1,4 +1,4 @@
-using FlakyTest.XUnit.Guards;
+﻿using FlakyTest.XUnit.Guards;
 using Xunit;
 
 namespace FlakyTest.XUnit.Attributes
@@ -22,7 +22,7 @@ namespace FlakyTest.XUnit.Attributes
 
         public readonly string FlakyExplanation;
         public readonly int RetriesBeforeFail;
-        
+
         public FlakyFactAttribute(string flakyExplanation, int retriesBeforeFail = DefaultRetriesBeforeFail)
         {
             Guard.AgainstNotProvidedFlakyExplanation(flakyExplanation);

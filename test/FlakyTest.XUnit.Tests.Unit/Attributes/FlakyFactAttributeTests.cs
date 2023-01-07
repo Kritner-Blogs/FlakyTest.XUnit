@@ -1,4 +1,4 @@
-using FlakyTest.XUnit.Attributes;
+﻿using FlakyTest.XUnit.Attributes;
 using FluentAssertions;
 using Xunit;
 
@@ -13,7 +13,7 @@ public class FlakyFactAttributeTests
 
     private const string FlakyTestExplanation =
         "This test is flaky because of an unstable API... further investigation and fixing should be done in JIRA-1234";
-    
+
     [Fact]
     public void ctor_WhenGivenNoRetryCount_ShouldUseDefault()
     {
@@ -21,7 +21,7 @@ public class FlakyFactAttributeTests
 
         _sut.RetriesBeforeFail.Should().Be(FlakyFactAttribute.DefaultRetriesBeforeFail);
     }
-    
+
     [Theory]
     [InlineData(1)]
     [InlineData(7)]
@@ -32,7 +32,7 @@ public class FlakyFactAttributeTests
 
         _sut.RetriesBeforeFail.Should().Be(retryCount);
     }
-    
+
     [Theory]
     [InlineData(FlakyTestExplanation)]
     [InlineData("fixed stuff")]

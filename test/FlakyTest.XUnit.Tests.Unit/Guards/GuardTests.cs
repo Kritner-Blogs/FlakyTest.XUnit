@@ -1,7 +1,7 @@
-using FlakyTest.XUnit.Exceptions;
-using Xunit;
+﻿using FlakyTest.XUnit.Exceptions;
 using FlakyTest.XUnit.Guards;
 using FluentAssertions;
+using Xunit;
 
 namespace FlakyTest.XUnit.Tests.Unit.Guards;
 
@@ -27,7 +27,7 @@ public class GuardTests
 
         action.Should().ThrowExactly<FlakyExplanationException>();
     }
-    
+
     [Fact]
     public void AgainstNotProvidedFlakyExplanation_WhenGivenNullExplanation_ShouldThrow()
     {
@@ -46,7 +46,7 @@ public class GuardTests
 
         action.Should().NotThrow();
     }
-    
+
     [Theory]
     [InlineData(-1)]
     [InlineData(-7)]
@@ -57,7 +57,7 @@ public class GuardTests
 
         action.Should().ThrowExactly<InvalidNumberOfRetriesException>();
     }
-    
+
     [Fact]
     public void AgainstInvalidRetries_WhenGivenZero_ShouldThrow()
     {

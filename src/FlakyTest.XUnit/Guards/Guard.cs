@@ -1,4 +1,4 @@
-using FlakyTest.XUnit.Exceptions;
+﻿using FlakyTest.XUnit.Exceptions;
 
 namespace FlakyTest.XUnit.Guards
 {

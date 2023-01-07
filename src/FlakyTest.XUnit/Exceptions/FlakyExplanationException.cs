@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace FlakyTest.XUnit.Exceptions
 {
@@ -10,7 +10,7 @@ namespace FlakyTest.XUnit.Exceptions
         private const string ErrorMessage =
             @"Flaky tests should be the exception, not the 'norm'.  Provide an explanation / ticket number for follow up, etc. so context isn't completely lost.";
 
-        public FlakyExplanationException() 
+        public FlakyExplanationException()
             : base(ErrorMessage) { }
     }
 }
