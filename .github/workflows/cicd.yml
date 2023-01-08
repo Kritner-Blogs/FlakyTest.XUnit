@@ -51,8 +51,11 @@ jobs:
     - name: Build
       run: dotnet build -c Release --no-restore
     
-    - name: Test
-      run: dotnet test -c Release --no-restore --no-build --verbosity normal --filter "Category!=LongRunning"
+    - name: Unit Test
+      run: dotnet test test/FlakyTest.XUnit.Tests.Unit/FlakyTest.XUnit.Tests.Unit.csproj -c Release --no-restore --no-build --verbosity normal 
+
+    - name: Integration Test
+      run: dotnet test test/FlakyTest.XUnit.Tests.Integration/FlakyTest.XUnit.Tests.Integration.csproj -c Release --no-restore --no-build --verbosity normal 
 
     - name: Pack
       run: dotnet pack src/FlakyTest.XUnit/FlakyTest.XUnit.csproj -c Release --no-restore --no-build --include-symbols -p:SymbolPackageFormat=snupkg -o .
