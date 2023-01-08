@@ -7,7 +7,31 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+
+    <Authors>Kritner</Authors>
+    <Company>Kritner-Blogs</Company>
+    <Copyright>Copyright (c) Kritner-Blogs/FlakyTest.XUnit 2023.</Copyright>
+    <Description>Flaky test attribute for retrying flaky tests in XUnit prior to marking them failure.</Description>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>xunit</PackageTags>
+
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PackageProjectUrl>https://github.com/Kritner-Blogs/FlakyTest.XUnit</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Kritner-Blogs/FlakyTest.XUnit</RepositoryUrl>
+
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
   <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="xunit.core" Version="2.4.2" />
   </ItemGroup>
 
