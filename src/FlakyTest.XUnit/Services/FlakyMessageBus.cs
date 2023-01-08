@@ -22,11 +22,19 @@ public class FlakyMessageBus : IMessageBus
     private readonly IMessageBus _messageBus;
     private readonly ConcurrentQueue<IMessageSinkMessage> _messageQueue = new();
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="messageBus">The default XUnit message bus to intercept/decorate.</param>
     public FlakyMessageBus(IMessageBus messageBus)
     {
         _messageBus = messageBus;
     }
 
+    /// <summary>
+    /// Enqueues a message
+    /// </summary>
+    /// <param name="message">The message to enqueue</param>
     public bool QueueMessage(IMessageSinkMessage message)
     {
         _messageQueue.Enqueue(message);

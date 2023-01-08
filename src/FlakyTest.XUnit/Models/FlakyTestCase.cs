@@ -14,9 +14,15 @@ namespace FlakyTest.XUnit.Models;
 [Serializable]
 public class FlakyTestCase : XunitTestCase, IFlakyTestCase
 {
+    /// <summary>
+    /// This constructor should not be used.
+    /// </summary>
     [Obsolete("Should only ever be implicitly called, never explicitly", true)]
     public FlakyTestCase() { }
-    
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public FlakyTestCase(
         IMessageSink diagnosticMessageSink,
         TestMethodDisplay defaultMethodDisplay,
@@ -30,8 +36,12 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
         RetriesBeforeFail = retriesBeforeFail;
     }
 
+    /// <summary>
+    /// Number of retries prior to being deemed a failing test.
+    /// </summary>
     public int RetriesBeforeFail { get; private set; }
 
+    /// <inheritdoc />
     public override async Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink, IMessageBus messageBus,
         object[] constructorArguments, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource)
     {
@@ -40,8 +50,8 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
                     TestMethodArguments, bus, aggregator, cancellationTokenSource)
                 .RunAsync());
     }
-        
 
+    /// <inheritdoc />
     public override void Serialize(IXunitSerializationInfo data)
     {
         base.Serialize(data);
@@ -49,6 +59,7 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
         data.AddValue(nameof(RetriesBeforeFail), RetriesBeforeFail);
     }
 
+    /// <inheritdoc />
     public override void Deserialize(IXunitSerializationInfo data)
     {
         base.Deserialize(data);
@@ -99,7 +110,7 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
         diagnosticMessageSink.OnMessage(new DiagnosticMessage(
             "The test '{0}' run attempt was cancelled.",
             testCase.DisplayName));
-        
+
         return new RunSummary()
         {
             Failed = 1,

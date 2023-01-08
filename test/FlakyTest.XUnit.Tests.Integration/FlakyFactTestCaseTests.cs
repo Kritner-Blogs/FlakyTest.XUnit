@@ -16,7 +16,7 @@ public class FlakyFactTestCaseTests
             .ReturnsAsync(false)
             .ReturnsAsync(true);
     }
-    
+
     [Fact]
     public void WhenUsingFactsSync_ShouldBehaveNormally()
     {
@@ -63,13 +63,13 @@ public class FlakyFactTestCaseTests
     {
         // This is effectively "state" for each "iteration" of the test run, up to the maximum tries.
         _counterWhenUsingFlakyFactShouldFailSpecifiedNumberOfTimesBeforeReportingFailure++;
-        
+
         // Check assumptions
         CustomRetries
             .Should()
             .NotBe(FlakyFactAttribute.DefaultRetriesBeforeFail,
                 "we're making sure it differs from the default to ensure it's failing the 'correct' number of times");
-        
+
         // this will "fail" until we hit the max retries, at which point the assertion will be successful.
         _counterWhenUsingFlakyFactShouldFailSpecifiedNumberOfTimesBeforeReportingFailure
             .Should()
@@ -81,7 +81,7 @@ public class FlakyFactTestCaseTests
     public async Task WhenUsingFlakyFact_ShouldShortCircuitPass()
     {
         _counterWhenUsingFlakyFactShouldShortCircuitPass++;
-        
+
         // The first two returns will be false, the next is true.
         // Assert in such a way that only the final one will be "successful".
         var result = await BoolReturner.Object.Get();

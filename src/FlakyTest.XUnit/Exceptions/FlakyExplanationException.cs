@@ -10,6 +10,9 @@ public class FlakyExplanationException : Exception
     private const string ErrorMessage =
         @"Flaky tests should be the exception, not the 'norm'.  Provide an explanation / ticket number for follow up, etc. so context isn't completely lost.";
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public FlakyExplanationException()
         : base(ErrorMessage) { }
 }

@@ -23,11 +23,26 @@ namespace FlakyTest.XUnit.Attributes;
 [AttributeUsage(AttributeTargets.Method)]
 public class FlakyFactAttribute : FactAttribute
 {
+    /// <summary>
+    /// The default number of retries before failing a test case.
+    /// </summary>
     public const int DefaultRetriesBeforeFail = 5;
 
+    /// <summary>
+    /// The explanation as to why the test case is being annotated as flaky.
+    /// </summary>
     public readonly string FlakyExplanation;
+
+    /// <summary>
+    /// The number of attempts to retry a test case before deeming it a failed test. 
+    /// </summary>
     public readonly int RetriesBeforeFail;
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="flakyExplanation">The explanation to why the test is being marked flaky.</param>
+    /// <param name="retriesBeforeFail">The number of retries prior to marking a test as failed.</param>
     public FlakyFactAttribute(string flakyExplanation, int retriesBeforeFail = DefaultRetriesBeforeFail)
     {
         Guard.AgainstNotProvidedFlakyExplanation(flakyExplanation);

@@ -9,8 +9,8 @@ public class InvalidNumberOfRetriesException : Exception
 {
     private const string ErrorMessage = "Number of retries should not be less or equal to zero.";
 
-    public InvalidNumberOfRetriesException() : base(ErrorMessage)
-    {
-
-    }
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public InvalidNumberOfRetriesException() : base(ErrorMessage) { }
 }

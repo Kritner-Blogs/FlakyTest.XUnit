@@ -2,6 +2,9 @@
 
 namespace FlakyTest.XUnit.Interfaces;
 
+/// <summary>
+/// Implements <see cref="IXunitTestCase"/> and adds the additional properties necessary for retrying.
+/// </summary>
 public interface IFlakyTestCase : IXunitTestCase
 {
     /// <summary>
