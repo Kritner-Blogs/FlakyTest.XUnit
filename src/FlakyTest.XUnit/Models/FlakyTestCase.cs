@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FlakyTest.XUnit.Interfaces;
+using FlakyTest.XUnit.Services;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -65,12 +66,13 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
         var attempt = 0;
         while (!cancellationTokenSource.IsCancellationRequested)
         {
+            using var flakyTestMessageBus = new FlakyMessageBus(messageBus);
             attempt++;
             diagnosticMessageSink.OnMessage(new DiagnosticMessage(
                 "Running test '{0}'.  Attempt {1} of {2}",
                 testCase.DisplayName, attempt, testCase.RetriesBeforeFail));
 
-            RunSummary summary = await funcRun(messageBus);
+            RunSummary summary = await funcRun(flakyTestMessageBus);
 
             // If we have a passing test, or we've attempted (and failed) the maximum retries, return a result.
             if (summary.Failed == 0 || attempt >= testCase.RetriesBeforeFail)
@@ -82,6 +84,7 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
                         testCase.DisplayName, testCase.RetriesBeforeFail));
                 }
 
+                flakyTestMessageBus.Flush();
                 return summary;
             }
 
