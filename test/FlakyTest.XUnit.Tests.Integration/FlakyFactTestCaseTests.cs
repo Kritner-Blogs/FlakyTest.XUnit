@@ -1,4 +1,5 @@
 ﻿using FlakyTest.XUnit.Attributes;
+using FlakyTest.XUnit.Interfaces;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -53,7 +54,7 @@ public class FlakyFactTestCaseTests
         // this will "fail" until we hit the max retries, at which point the assertion will be successful.
         _counterWhenUsingFlakyFactShouldFailUntilHittingDefaultMax
             .Should()
-            .Be(FlakyFactAttribute.DefaultRetriesBeforeFail);
+            .Be(IFlakyAttribute.DefaultRetriesBeforeFail);
     }
 
     private const int CustomRetries = 7;
@@ -67,7 +68,7 @@ public class FlakyFactTestCaseTests
         // Check assumptions
         CustomRetries
             .Should()
-            .NotBe(FlakyFactAttribute.DefaultRetriesBeforeFail,
+            .NotBe(IFlakyAttribute.DefaultRetriesBeforeFail,
                 "we're making sure it differs from the default to ensure it's failing the 'correct' number of times");
 
         // this will "fail" until we hit the max retries, at which point the assertion will be successful.

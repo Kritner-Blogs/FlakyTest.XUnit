@@ -1,4 +1,5 @@
 ﻿using FlakyTest.XUnit.Attributes;
+using FlakyTest.XUnit.Interfaces;
 using FluentAssertions;
 using Xunit;
 
@@ -19,7 +20,7 @@ public class FlakyFactAttributeTests
     {
         _sut = new FlakyFactAttribute(FlakyTestExplanation);
 
-        _sut.RetriesBeforeFail.Should().Be(FlakyFactAttribute.DefaultRetriesBeforeFail);
+        _sut.RetriesBeforeFail.Should().Be(IFlakyAttribute.DefaultRetriesBeforeFail);
     }
 
     [Theory]
