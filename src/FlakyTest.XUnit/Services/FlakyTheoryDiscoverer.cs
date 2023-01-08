@@ -21,14 +21,14 @@ public class FlakyTheoryDiscoverer : TheoryDiscoverer
 
     /// <inheritdoc />
     protected override IEnumerable<IXunitTestCase> CreateTestCasesForDataRow(
-        ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo theoryAttribute, 
+        ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo theoryAttribute,
         object[] dataRow)
     {
         int retriesBeforeFail = theoryAttribute.GetNamedArgument<int>(nameof(IFlakyAttribute.RetriesBeforeFail));
-        
+
         return new[]
         {
-            new FlakyTestCase(DiagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(), 
+            new FlakyTestCase(DiagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(),
                 discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod, retriesBeforeFail, dataRow)
         };
     }

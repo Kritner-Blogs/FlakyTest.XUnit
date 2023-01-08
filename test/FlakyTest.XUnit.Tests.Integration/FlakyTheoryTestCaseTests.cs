@@ -55,7 +55,7 @@ public class FlakyTheoryTestCaseTests
     public void WhenUsingFlakyTheory_ShouldFailUntilHittingDefaultMax(bool value)
     {
         value.Should().BeTrue();
-        
+
         // This is effectively "state" for each "iteration" of the test run, up to the maximum tries.
         _counterWhenUsingFlakyTheoryShouldFailUntilHittingDefaultMax++;
 
@@ -72,7 +72,7 @@ public class FlakyTheoryTestCaseTests
     public void WhenUsingFlakyTheory_ShouldFailSpecifiedNumberOfTimesBeforeReportingFailure(bool value)
     {
         value.Should().BeTrue();
-        
+
         // This is effectively "state" for each "iteration" of the test run, up to the maximum tries.
         _counterWhenUsingFlakyTheoryShouldFailSpecifiedNumberOfTimesBeforeReportingFailure++;
 
@@ -94,7 +94,7 @@ public class FlakyTheoryTestCaseTests
     public async Task WhenUsingFlakyTheory_ShouldShortCircuitPass(bool value)
     {
         value.Should().BeTrue();
-        
+
         _counterWhenUsingFlakyTheoryShouldShortCircuitPass++;
 
         // The first two returns will be false, the next is true.

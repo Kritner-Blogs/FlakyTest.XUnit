@@ -37,10 +37,10 @@ public class FlakyFactAttribute : FactAttribute, IFlakyAttribute
         FlakyExplanation = flakyExplanation;
         RetriesBeforeFail = retriesBeforeFail;
     }
-    
+
     /// <inheritdoc />
     public string FlakyExplanation { get; }
-    
+
     /// <inheritdoc />
     public int RetriesBeforeFail { get; }
 }

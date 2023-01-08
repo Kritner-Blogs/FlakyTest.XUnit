@@ -45,7 +45,7 @@ public class FlakyTheoryAttribute : TheoryAttribute, IFlakyAttribute
 
     /// <inheritdoc />
     public string FlakyExplanation { get; }
-    
+
     /// <inheritdoc />
     public int RetriesBeforeFail { get; }
 }

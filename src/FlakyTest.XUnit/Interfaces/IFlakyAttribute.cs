@@ -9,7 +9,7 @@ public interface IFlakyAttribute
     /// The default number of retries before failing a test case.
     /// </summary>
     public const int DefaultRetriesBeforeFail = 5;
-    
+
     /// <summary>
     /// The explanation as to why the test case is being annotated as flaky.
     /// </summary>
