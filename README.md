@@ -1,5 +1,12 @@
 # FlakyTest.XUnit
 
+[![Build and test](https://github.com/Kritner-Blogs/FlakyTest.XUnit/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Kritner-Blogs/FlakyTest.XUnit/actions/workflows/ci.yml) 
+
+![Latest NuGet Version](https://img.shields.io/nuget/v/FlakyTest.XUnit) 
+![License](https://img.shields.io/github/license/Kritner-Blogs/FlakyTest.XUnit)
+
+## Overview
+
 Do you have some flaky tests? Are you using XUnit? Do you want to retry your flaky tests a few times before considering them failures? Heck yeah brother! (You should probably actually fix the test so it's not flaky, but sometimes you just don't have time!)
 
 If you still want an easy way to mark a test or two (but no more than that!) as flaky, then this might be the package for you.
