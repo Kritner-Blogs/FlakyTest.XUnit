@@ -16,6 +16,14 @@ public async Task WhenDoingThing_ShouldHaveThisResult()
 {
    // your test implementation which is sometimes flaky
 }
+
+[FlakyTheory("same idea as flaky fact, just using a theory. follow up to fix this in JIRA-1234", 42)]
+[InlineData(true)]
+[InlineData(false)]
+public async Task WhenDoingThing_ShouldHaveThisResult(bool isDoots)
+{
+   // your test implementation which is sometimes flaky
+}
 ```
 
 The project *requires* the first string parameter `flakyExplanation` to be not null/empty... cuz you really shouldn't be using this anyway.  This can be used as a way to describe how/why the test is flaky, and perhaps leave a note and ticket for follow up to get the flakyness aspect of the test fixed.
