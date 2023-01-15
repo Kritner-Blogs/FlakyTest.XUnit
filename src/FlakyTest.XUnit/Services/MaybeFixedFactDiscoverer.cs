@@ -8,11 +8,11 @@ using Xunit.Sdk;
 namespace FlakyTest.XUnit.Services;
 
 /// <summary>
-/// Implementation of <see cref="IXunitTestCaseDiscoverer"/> for handling <see cref="FlakyFactAttribute"/> decorated
+/// Implementation of <see cref="IXunitTestCaseDiscoverer"/> for handling <see cref="MaybeFixedFactAttribute"/> decorated
 /// test cases.
 /// </summary>
 /// <inheritdoc />
-public class FlakyFactDiscoverer : IXunitTestCaseDiscoverer
+public class MaybeFixedFactDiscoverer : IXunitTestCaseDiscoverer
 {
     private readonly IMessageSink _messageSink;
 
@@ -20,7 +20,7 @@ public class FlakyFactDiscoverer : IXunitTestCaseDiscoverer
     /// Constructor
     /// </summary>
     /// <param name="messageSink">The default XUnit message sink</param>
-    public FlakyFactDiscoverer(IMessageSink messageSink)
+    public MaybeFixedFactDiscoverer(IMessageSink messageSink)
     {
         _messageSink = messageSink;
     }
@@ -29,10 +29,10 @@ public class FlakyFactDiscoverer : IXunitTestCaseDiscoverer
     public IEnumerable<IXunitTestCase> Discover(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod,
         IAttributeInfo factAttribute)
     {
-        var retriesBeforeFail = factAttribute.GetNamedArgument<int>(nameof(IFlakyAttribute.RetriesBeforeFail));
+        var retriesBeforeDeemingNoLongerFlaky = factAttribute.GetNamedArgument<int>(nameof(IMaybeFixedAttribute.RetriesBeforeDeemingNoLongerFlaky));
 
-        IXunitTestCase testCase = new FlakyTestCase(_messageSink, discoveryOptions.MethodDisplayOrDefault(),
-            discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod, retriesBeforeFail);
+        IXunitTestCase testCase = new MaybeFixedTestCase(_messageSink, discoveryOptions.MethodDisplayOrDefault(),
+            discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod, retriesBeforeDeemingNoLongerFlaky);
 
         return new[] { testCase };
     }
