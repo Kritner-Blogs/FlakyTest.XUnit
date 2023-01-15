@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using FlakyTest.XUnit.Attributes;
+using FlakyTest.XUnit.Interfaces;
 using FlakyTest.XUnit.Models;
 using Xunit.Abstractions;
 using Xunit.Sdk;
@@ -28,7 +29,7 @@ public class FlakyFactDiscoverer : IXunitTestCaseDiscoverer
     public IEnumerable<IXunitTestCase> Discover(ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod,
         IAttributeInfo factAttribute)
     {
-        var retriesBeforeFail = factAttribute.GetNamedArgument<int>(nameof(FlakyFactAttribute.RetriesBeforeFail));
+        var retriesBeforeFail = factAttribute.GetNamedArgument<int>(nameof(IFlakyAttribute.RetriesBeforeFail));
 
         IXunitTestCase testCase = new FlakyTestCase(_messageSink, discoveryOptions.MethodDisplayOrDefault(),
             discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod, retriesBeforeFail);

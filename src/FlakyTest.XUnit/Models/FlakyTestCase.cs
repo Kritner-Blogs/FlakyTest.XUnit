@@ -36,9 +36,7 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
         RetriesBeforeFail = retriesBeforeFail;
     }
 
-    /// <summary>
-    /// Number of retries prior to being deemed a failing test.
-    /// </summary>
+    /// <inheritdoc />
     public int RetriesBeforeFail { get; private set; }
 
     /// <inheritdoc />
@@ -92,7 +90,7 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
                 {
                     diagnosticMessageSink.OnMessage(new DiagnosticMessage(
                         "The test '{0}' reports failure after {1} attempts.",
-                        testCase.DisplayName, testCase.RetriesBeforeFail));
+                        testCase.DisplayName, attempt));
                 }
 
                 flakyTestMessageBus.Flush();

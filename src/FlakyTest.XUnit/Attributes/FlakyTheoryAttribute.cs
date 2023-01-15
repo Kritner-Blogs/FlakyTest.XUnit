@@ -25,16 +25,11 @@ namespace FlakyTest.XUnit.Attributes;
 public class FlakyTheoryAttribute : TheoryAttribute, IFlakyAttribute
 {
     /// <summary>
-    /// The default number of retries before failing a test case.
-    /// </summary>
-    public const int DefaultRetriesBeforeFail = 5;
-
-    /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="flakyExplanation">The explanation to why the test is being marked flaky.</param>
     /// <param name="retriesBeforeFail">The number of retries prior to marking a test as failed.</param>
-    public FlakyTheoryAttribute(string flakyExplanation, int retriesBeforeFail = DefaultRetriesBeforeFail)
+    public FlakyTheoryAttribute(string flakyExplanation, int retriesBeforeFail = IFlakyAttribute.DefaultRetriesBeforeFail)
     {
         Guard.AgainstNotProvidedFlakyExplanation(flakyExplanation);
         Guard.AgainstInvalidRetries(retriesBeforeFail);
