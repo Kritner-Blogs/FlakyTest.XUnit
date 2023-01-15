@@ -1,11 +1,17 @@
 ﻿using FlakyTest.XUnit.Attributes;
 using FlakyTest.XUnit.Interfaces;
+using FlakyTest.XUnit.Models;
+using FlakyTest.XUnit.Services;
 using FluentAssertions;
 using Moq;
 using Xunit;
 
 namespace FlakyTest.XUnit.Tests.Integration;
 
+/// <summary>
+/// Tests checking against behaviors/interactions between <see cref="FlakyFactAttribute"/>, <see cref="FlakyFactDiscoverer"/>
+/// and <see cref="FlakyTestCase"/>.
+/// </summary>
 public class FlakyFactTestCaseTests
 {
     private static readonly Mock<IBoolReturner> BoolReturner = new();

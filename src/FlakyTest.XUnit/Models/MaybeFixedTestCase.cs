@@ -12,32 +12,32 @@ namespace FlakyTest.XUnit.Models;
 /// Additional properties / implementation against the base <see cref="XunitTestCase"/> to accomodate rerunning.
 /// </summary>
 [Serializable]
-public class FlakyTestCase : XunitTestCase, IFlakyTestCase
+public class MaybeFixedTestCase : XunitTestCase, IMaybeFixedTestCase
 {
     /// <summary>
     /// This constructor should not be used.
     /// </summary>
     [Obsolete("Should only ever be implicitly called, never explicitly", true)]
-    public FlakyTestCase() { }
+    public MaybeFixedTestCase() { }
 
     /// <summary>
     /// Constructor
     /// </summary>
-    public FlakyTestCase(
+    public MaybeFixedTestCase(
         IMessageSink diagnosticMessageSink,
         TestMethodDisplay defaultMethodDisplay,
         TestMethodDisplayOptions defaultMethodDisplayOptions,
         ITestMethod testMethod,
-        int retriesBeforeFail,
+        int retriesBeforeDeemingNoLongerFlaky,
         object[]? testMethodArguments = null)
         : base(diagnosticMessageSink, defaultMethodDisplay, defaultMethodDisplayOptions, testMethod,
             testMethodArguments)
     {
-        RetriesBeforeFail = retriesBeforeFail;
+        RetriesBeforeDeemingNoLongerFlaky = retriesBeforeDeemingNoLongerFlaky;
     }
 
     /// <inheritdoc />
-    public int RetriesBeforeFail { get; private set; }
+    public int RetriesBeforeDeemingNoLongerFlaky { get; private set; }
 
     /// <inheritdoc />
     public override async Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink, IMessageBus messageBus,
@@ -54,7 +54,7 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
     {
         base.Serialize(data);
 
-        data.AddValue(nameof(RetriesBeforeFail), RetriesBeforeFail);
+        data.AddValue(nameof(RetriesBeforeDeemingNoLongerFlaky), RetriesBeforeDeemingNoLongerFlaky);
     }
 
     /// <inheritdoc />
@@ -62,11 +62,11 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
     {
         base.Deserialize(data);
 
-        RetriesBeforeFail = data.GetValue<int>(nameof(RetriesBeforeFail));
+        RetriesBeforeDeemingNoLongerFlaky = data.GetValue<int>(nameof(RetriesBeforeDeemingNoLongerFlaky));
     }
 
     private static async Task<RunSummary> RunAsync(
-        IFlakyTestCase testCase,
+        IMaybeFixedTestCase testCase,
         IMessageSink diagnosticMessageSink,
         IMessageBus messageBus,
         CancellationTokenSource cancellationTokenSource,
@@ -79,12 +79,11 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
             attempt++;
             diagnosticMessageSink.OnMessage(new DiagnosticMessage(
                 "Running test '{0}'.  Attempt {1} of {2}",
-                testCase.DisplayName, attempt, testCase.RetriesBeforeFail));
+                testCase.DisplayName, attempt, testCase.RetriesBeforeDeemingNoLongerFlaky));
 
             RunSummary summary = await funcRun(flakyTestMessageBus);
 
-            // If we have a passing test, or we've attempted (and failed) the maximum retries, return a result.
-            if (summary.Failed == 0 || attempt == testCase.RetriesBeforeFail)
+            if (summary.Failed > 0 || attempt == testCase.RetriesBeforeDeemingNoLongerFlaky - 1)
             {
                 if (summary.Failed > 0)
                 {
@@ -97,11 +96,10 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
                 return summary;
             }
 
-            // We had a failing test, log that.  If this point is hit there are additional attempts to make on the test,
-            // prior ot deeming it a failed test.
+            // We had a passing test, but have not completed our loop up to the maximum, keep going but log the pass
             diagnosticMessageSink.OnMessage(new DiagnosticMessage(
-                "Test '{0}' failed on attempt {1}.  Will retry {2} more times for a passing test",
-                testCase.DisplayName, attempt, testCase.RetriesBeforeFail - attempt));
+                "Test '{0}' succeeded on attempt {1}.  Will retry {2} more times to help assure test is not flaky",
+                testCase.DisplayName, attempt, testCase.RetriesBeforeDeemingNoLongerFlaky - attempt));
         }
 
         // Task was cancelled.
@@ -111,7 +109,7 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
 
         return new RunSummary()
         {
-            Failed = 1,
+            Failed = 0,
             Total = 1,
         };
     }

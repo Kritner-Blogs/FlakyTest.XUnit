@@ -6,7 +6,7 @@ using Xunit;
 namespace FlakyTest.XUnit.Tests.Unit.Guards;
 
 /// <summary>
-/// Tests against the <see cref="Guard"/> methods.
+/// Tests against the <see cref="FlakyTest.XUnit.Guards.Guard"/> methods.
 /// </summary>
 public class GuardTests
 {
