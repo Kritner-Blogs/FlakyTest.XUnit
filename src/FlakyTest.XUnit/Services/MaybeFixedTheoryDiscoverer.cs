@@ -25,12 +25,12 @@ public class MaybeFixedTheoryDiscoverer : TheoryDiscoverer
         ITestFrameworkDiscoveryOptions discoveryOptions, ITestMethod testMethod, IAttributeInfo theoryAttribute,
         object[] dataRow)
     {
-        int retriesBeforeFail = theoryAttribute.GetNamedArgument<int>(nameof(IFlakyAttribute.RetriesBeforeFail));
+        int retriesBeforeDeemingNoLongerFlaky = theoryAttribute.GetNamedArgument<int>(nameof(IMaybeFixedAttribute.RetriesBeforeDeemingNoLongerFlaky));
 
         return new[]
         {
             new FlakyTestCase(DiagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(),
-                discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod, retriesBeforeFail, dataRow)
+                discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod, retriesBeforeDeemingNoLongerFlaky, dataRow)
         };
     }
 }
