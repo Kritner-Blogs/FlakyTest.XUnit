@@ -69,7 +69,7 @@ public class MaybeFixedFactTestCaseTests
             .Should()
             .BeLessOrEqualTo(CustomRetries);
     }
-    
+
     [MaybeFixedFact(Skip = "skipping")]
     public async Task WhenUsedWithSkip_ShouldSkip()
     {

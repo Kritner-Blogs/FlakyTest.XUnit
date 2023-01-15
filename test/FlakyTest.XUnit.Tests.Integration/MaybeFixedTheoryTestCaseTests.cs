@@ -79,7 +79,7 @@ public class MaybeFixedTheoryTestCaseTests
             .Should()
             .BeLessOrEqualTo(CustomRetries);
     }
-    
+
     [MaybeFixedTheory(Skip = "skipping")]
     [InlineData(true, Skip = "skipping")]
     public async Task WhenUsedWithSkipTheory_ShouldSkip(bool value)
@@ -87,7 +87,7 @@ public class MaybeFixedTheoryTestCaseTests
         await Task.Delay(10_000);
         value.Should().BeFalse("this assert will always fail, but the test should be skipped so it doesn't matter");
     }
-    
+
     [MaybeFixedTheory]
     [InlineData(true, Skip = "skipping")]
     public async Task WhenUsedWithSkipInlineData_ShouldSkip(bool value)
