@@ -111,4 +111,20 @@ public class FlakyTheoryTestCaseTests
         _counterWhenUsingFlakyTheoryShouldShortCircuitPass
             .Should().Be(3, "this is the number of retries that occurred prior to hitting a success");
     }
+
+    [FlakyTheory("Should work (skip) with skip", Skip = "skipping")]
+    [InlineData(true, Skip = "skipping")]
+    public async Task WhenUsedWithSkipTheory_ShouldSkip(bool value)
+    {
+        await Task.Delay(10_000);
+        value.Should().BeFalse("this assert will always fail, but the test should be skipped so it doesn't matter");
+    }
+
+    [FlakyTheory("Should work (skip) with skip")]
+    [InlineData(true, Skip = "skipping")]
+    public async Task WhenUsedWithSkipInlineData_ShouldSkip(bool value)
+    {
+        await Task.Delay(10_000);
+        value.Should().BeFalse("this assert will always fail, but the test should be skipped so it doesn't matter");
+    }
 }

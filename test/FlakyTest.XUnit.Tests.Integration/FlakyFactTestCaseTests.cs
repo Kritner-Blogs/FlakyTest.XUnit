@@ -97,4 +97,11 @@ public class FlakyFactTestCaseTests
         _counterWhenUsingFlakyFactShouldShortCircuitPass
             .Should().Be(3, "this is the number of retries that occurred prior to hitting a success");
     }
+
+    [FlakyFact("Should work (skip) with skip", Skip = "skipping")]
+    public async Task WhenUsedWithSkip_ShouldSkip()
+    {
+        await Task.Delay(10_000);
+        true.Should().BeFalse("this assert will always fail, but the test should be skipped so it doesn't matter");
+    }
 }
