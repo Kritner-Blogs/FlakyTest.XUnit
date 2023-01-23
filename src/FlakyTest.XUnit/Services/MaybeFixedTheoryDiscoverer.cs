@@ -29,7 +29,7 @@ public class MaybeFixedTheoryDiscoverer : TheoryDiscoverer
 
         return new[]
         {
-            new FlakyTestCase(DiagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(),
+            new MaybeFixedTestCase(DiagnosticMessageSink, discoveryOptions.MethodDisplayOrDefault(),
                 discoveryOptions.MethodDisplayOptionsOrDefault(), testMethod, retriesBeforeDeemingNoLongerFlaky, dataRow)
         };
     }
