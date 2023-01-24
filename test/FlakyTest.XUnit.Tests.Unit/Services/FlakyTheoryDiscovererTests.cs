@@ -1,4 +1,4 @@
-using FlakyTest.XUnit.Models;
+﻿using FlakyTest.XUnit.Models;
 using FlakyTest.XUnit.Services;
 using FluentAssertions;
 using Moq;
@@ -27,9 +27,9 @@ public class FlakyTheoryDiscovererTests
     public void WhenDiscover_ShouldReturnSingleTestCase()
     {
         var result = _sut.TestableCreateTestCasesForDataRow(
-            new Mock<ITestFrameworkDiscoveryOptions>().Object, 
+            new Mock<ITestFrameworkDiscoveryOptions>().Object,
             new Mock<ITestMethod>().Object,
-            new Mock<IAttributeInfo>().Object, 
+            new Mock<IAttributeInfo>().Object,
             new object[] { })
             .ToList();
 

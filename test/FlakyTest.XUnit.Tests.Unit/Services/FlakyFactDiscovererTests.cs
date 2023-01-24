@@ -1,4 +1,4 @@
-using FlakyTest.XUnit.Models;
+﻿using FlakyTest.XUnit.Models;
 using FlakyTest.XUnit.Services;
 using FluentAssertions;
 using Moq;
@@ -15,7 +15,7 @@ public class FlakyFactDiscovererTests
     public void WhenDiscover_ShouldReturnSingleTestCase()
     {
         var result = _sut.Discover(
-            new Mock<ITestFrameworkDiscoveryOptions>().Object, 
+            new Mock<ITestFrameworkDiscoveryOptions>().Object,
             new Mock<ITestMethod>().Object, new Mock<IAttributeInfo>().Object)
             .ToList();
 
