@@ -1,6 +1,7 @@
 # FlakyTest.XUnit
 
 [![Build and test](https://github.com/Kritner-Blogs/FlakyTest.XUnit/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Kritner-Blogs/FlakyTest.XUnit/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/Kritner-Blogs/FlakyTest.XUnit/badge.svg?branch=main)](https://coveralls.io/github/Kritner-Blogs/FlakyTest.XUnit?branch=main)
 
 ![Latest NuGet Version](https://img.shields.io/nuget/v/FlakyTest.XUnit)
 ![License](https://img.shields.io/github/license/Kritner-Blogs/FlakyTest.XUnit)
