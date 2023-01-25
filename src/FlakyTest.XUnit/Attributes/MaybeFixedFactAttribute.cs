@@ -22,7 +22,10 @@ public class MaybeFixedFactAttribute : FactAttribute, IMaybeFixedAttribute
     /// <summary>
     /// Constructor
     /// </summary>
-    /// <param name="retriesBeforeDeemingNoLongerFlaky">The number of retries prior to marking a test as failed.</param>
+    /// <param name="retriesBeforeDeemingNoLongerFlaky">
+    /// The number of times to run the test.  Each attempt must pass for the test to be overall considered a 
+    /// "passing" (or no longer flaky) test.
+    /// </param>
     public MaybeFixedFactAttribute(
         int retriesBeforeDeemingNoLongerFlaky = IMaybeFixedAttribute.DefaultRetriesBeforeDeemingNoLongerFlaky)
     {
