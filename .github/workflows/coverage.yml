@@ -20,16 +20,16 @@ jobs:
       with:
         dotnet-version: 6.0.x
     
-    - name: Restore dependencies
+    - name: Restore dependencies 🔍
       run: dotnet restore
     
-    - name: Build
+    - name: Build 🛠️
       run: dotnet build -c Release --no-restore
     
-    - name: Test w/ coverage
+    - name: Test w/ coverage 🧪
       run: dotnet test -c Release --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
     
-    - name: Upload coverage
+    - name: Upload coverage 🚀
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}

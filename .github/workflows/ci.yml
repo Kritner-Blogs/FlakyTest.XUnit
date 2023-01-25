@@ -26,7 +26,7 @@ jobs:
 
     - name: Install dotnet-format tool
       run: dotnet tool install -g dotnet-format
-    
+
     - name: Check Code Format
       run: dotnet-format --check
 
@@ -45,15 +45,12 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-    
-    - name: Restore dependencies
-      run: dotnet restore
-    
-    - name: Build
-      run: dotnet build -c Release --no-restore
-    
-    - name: Unit Test
-      run: dotnet test test/FlakyTest.XUnit.Tests.Unit/FlakyTest.XUnit.Tests.Unit.csproj -c Release --no-build --verbosity normal
 
-    - name: Integration Test
-      run: dotnet test test/FlakyTest.XUnit.Tests.Integration/FlakyTest.XUnit.Tests.Integration.csproj -c Release --no-build --verbosity normal
+    - name: Restore dependencies 🔍
+      run: dotnet restore
+
+    - name: Build 🛠️
+      run: dotnet build -c Release --no-restore
+
+    - name: Test 🧪
+      run: dotnet test -c Release --no-build --verbosity normal
