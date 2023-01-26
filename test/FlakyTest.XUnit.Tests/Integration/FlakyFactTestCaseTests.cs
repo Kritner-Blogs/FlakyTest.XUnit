@@ -21,6 +21,7 @@ public class FlakyFactTestCaseTests
         BoolReturner.SetupSequence(s => s.Get())
             .ReturnsAsync(false)
             .ReturnsAsync(false)
+            .ThrowsAsync(new ExpectedTestException())
             .ReturnsAsync(true);
     }
 
@@ -82,6 +83,26 @@ public class FlakyFactTestCaseTests
             .Should()
             .Be(CustomRetries);
     }
+    
+    private const int CustomRetriesAsync = 7;
+    private static int _counterWhenUsingFlakyFactAsyncShouldFailSpecifiedNumberOfTimesBeforeReportingFailure;
+    [FlakyFact("Should fail the number of times specified, at which point a success condition is found", CustomRetries)]
+    public void WhenUsingFlakyFactAsync_ShouldFailSpecifiedNumberOfTimesBeforeReportingFailure()
+    {
+        // This is effectively "state" for each "iteration" of the test run, up to the maximum tries.
+        _counterWhenUsingFlakyFactAsyncShouldFailSpecifiedNumberOfTimesBeforeReportingFailure++;
+
+        // Check assumptions
+        CustomRetries
+            .Should()
+            .NotBe(IFlakyAttribute.DefaultRetriesBeforeFail,
+                "we're making sure it differs from the default to ensure it's failing the 'correct' number of times");
+
+        // this will "fail" until we hit the max retries, at which point the assertion will be successful.
+        _counterWhenUsingFlakyFactAsyncShouldFailSpecifiedNumberOfTimesBeforeReportingFailure
+            .Should()
+            .Be(CustomRetries);
+    }
 
     private static int _counterWhenUsingFlakyFactShouldShortCircuitPass;
     [FlakyFact("Should short circuit pass successfully", 100)]
@@ -92,10 +113,28 @@ public class FlakyFactTestCaseTests
         // The first two returns will be false, the next is true.
         // Assert in such a way that only the final one will be "successful".
         var result = await BoolReturner.Object.Get();
-        result.Should().BeTrue($"should only be true on the 3rd call. On call {_counterWhenUsingFlakyFactShouldShortCircuitPass}");
+        result.Should().BeTrue($"should only be true on the 4th call. On call {_counterWhenUsingFlakyFactShouldShortCircuitPass}");
 
         _counterWhenUsingFlakyFactShouldShortCircuitPass
-            .Should().Be(3, "this is the number of retries that occurred prior to hitting a success");
+            .Should().Be(4, "this is the number of retries that occurred prior to hitting a success");
+    }
+
+    [FlakyFact("Making sure it works with tests that have expected exceptions")]
+    public void WhenUsingFlakyFactSync_ShouldWorkWithExpectedExceptions()
+    {
+        var action = ExpectedTestException.ThrowException;
+
+        action.Should().ThrowExactly<ExpectedTestException>();
+    }
+    
+    [FlakyFact("Making sure it works with tests that have expected exceptions")]
+    public async Task WhenUsingFlakyFactAsync_ShouldWorkWithExpectedExceptions()
+    {
+        var action = ExpectedTestException.ThrowException;
+
+        await Task.Delay(1);
+        
+        action.Should().ThrowExactly<ExpectedTestException>();
     }
 
     [FlakyFact("Should work (skip) with skip", Skip = "skipping")]
