@@ -70,7 +70,7 @@ public class FlakyTheoryTestCaseTests
             .Should()
             .Be(IFlakyAttribute.DefaultRetriesBeforeFail);
     }
-    
+
     private static int _counterWhenUsingFlakyTheoryAsyncShouldFailUntilHittingDefaultMax;
     [FlakyTheory("Should fail the number of times until hitting the default max")]
     [InlineData(true)]
@@ -138,7 +138,7 @@ public class FlakyTheoryTestCaseTests
         value.Should().BeTrue();
         action.Should().ThrowExactly<ExpectedTestException>();
     }
-    
+
     [FlakyTheory("Making sure it works with tests that have expected exceptions")]
     [InlineData(true)]
     public async Task WhenUsingFlakyTheoryAsync_ShouldWorkWithExpectedExceptions(bool value)
@@ -150,7 +150,7 @@ public class FlakyTheoryTestCaseTests
         value.Should().BeTrue();
         action.Should().ThrowExactly<ExpectedTestException>();
     }
-    
+
     [FlakyTheory("Should work (skip) with skip", Skip = "skipping")]
     [InlineData(true, Skip = "skipping")]
     public async Task WhenUsedWithSkipTheory_ShouldSkip(bool value)

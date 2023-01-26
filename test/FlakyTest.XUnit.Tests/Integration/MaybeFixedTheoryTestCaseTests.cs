@@ -57,14 +57,14 @@ public class MaybeFixedTheoryTestCaseTests
             .Should()
             .BeLessOrEqualTo(IMaybeFixedAttribute.DefaultRetriesBeforeDeemingNoLongerFlaky);
     }
-    
+
     private static int _counterWhenUsingMaybeFixedTheoryAsyncShouldRunUntilHittingDefaultMax;
     [MaybeFixedTheory]
     [InlineData(true)]
     public async Task WhenUsingMaybeFixedTheoryAsync_ShouldRunUntilHittingDefaultMax(bool value)
     {
         await Task.Delay(1);
-        
+
         // This is effectively "state" for each "iteration" of the test run, up to the maximum tries.
         _counterWhenUsingMaybeFixedTheoryAsyncShouldRunUntilHittingDefaultMax++;
 
@@ -106,7 +106,7 @@ public class MaybeFixedTheoryTestCaseTests
         value.Should().BeTrue();
         action.Should().ThrowExactly<ExpectedTestException>();
     }
-    
+
     [MaybeFixedTheory]
     [InlineData(true)]
     public async Task WhenUsingFlakyTheoryAsync_ShouldWorkWithExpectedExceptions(bool value)
@@ -118,7 +118,7 @@ public class MaybeFixedTheoryTestCaseTests
         value.Should().BeTrue();
         action.Should().ThrowExactly<ExpectedTestException>();
     }
-    
+
     [MaybeFixedTheory(Skip = "skipping")]
     [InlineData(true, Skip = "skipping")]
     public async Task WhenUsedWithSkipTheory_ShouldSkip(bool value)

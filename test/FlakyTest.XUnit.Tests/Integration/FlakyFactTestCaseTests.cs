@@ -83,7 +83,7 @@ public class FlakyFactTestCaseTests
             .Should()
             .Be(CustomRetries);
     }
-    
+
     private const int CustomRetriesAsync = 7;
     private static int _counterWhenUsingFlakyFactAsyncShouldFailSpecifiedNumberOfTimesBeforeReportingFailure;
     [FlakyFact("Should fail the number of times specified, at which point a success condition is found", CustomRetries)]
@@ -126,14 +126,14 @@ public class FlakyFactTestCaseTests
 
         action.Should().ThrowExactly<ExpectedTestException>();
     }
-    
+
     [FlakyFact("Making sure it works with tests that have expected exceptions")]
     public async Task WhenUsingFlakyFactAsync_ShouldWorkWithExpectedExceptions()
     {
         var action = ExpectedTestException.ThrowException;
 
         await Task.Delay(1);
-        
+
         action.Should().ThrowExactly<ExpectedTestException>();
     }
 
