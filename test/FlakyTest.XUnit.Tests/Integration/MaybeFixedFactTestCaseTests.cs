@@ -51,6 +51,20 @@ public class MaybeFixedFactTestCaseTests
             .BeLessOrEqualTo(IMaybeFixedAttribute.DefaultRetriesBeforeDeemingNoLongerFlaky);
     }
 
+    private static int _counterWhenUsingMaybeFixedFactAsyncShouldRunUntilHittingDefaultMax;
+    [MaybeFixedFact]
+    public async Task WhenUsingMaybeFixedFactAsync_ShouldRunUntilHittingDefaultMax()
+    {
+        await Task.Delay(1);
+
+        // This is effectively "state" for each "iteration" of the test run, up to the maximum tries.
+        _counterWhenUsingMaybeFixedFactAsyncShouldRunUntilHittingDefaultMax++;
+
+        _counterWhenUsingMaybeFixedFactAsyncShouldRunUntilHittingDefaultMax
+            .Should()
+            .BeLessOrEqualTo(IMaybeFixedAttribute.DefaultRetriesBeforeDeemingNoLongerFlaky);
+    }
+
     private const int CustomRetries = 7;
     private static int _counterWhenUsingMaybeFixedFactShouldPassExpectedNumberOfTimes;
     [MaybeFixedFact(CustomRetries)]
@@ -68,6 +82,24 @@ public class MaybeFixedFactTestCaseTests
         _counterWhenUsingMaybeFixedFactShouldPassExpectedNumberOfTimes
             .Should()
             .BeLessOrEqualTo(CustomRetries);
+    }
+
+    [MaybeFixedFact]
+    public void WhenUsingFlakyTheorySync_ShouldWorkWithExpectedExceptions()
+    {
+        var action = ExpectedTestException.ThrowException;
+
+        action.Should().ThrowExactly<ExpectedTestException>();
+    }
+
+    [MaybeFixedFact]
+    public async Task WhenUsingFlakyTheoryAsync_ShouldWorkWithExpectedExceptions()
+    {
+        var action = ExpectedTestException.ThrowException;
+
+        await Task.Delay(1);
+
+        action.Should().ThrowExactly<ExpectedTestException>();
     }
 
     [MaybeFixedFact(Skip = "skipping")]
