@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using FlakyTest.XUnit.Enums;
 using FlakyTest.XUnit.Interfaces;
 using FlakyTest.XUnit.Services;
 using Xunit.Abstractions;
@@ -40,13 +41,18 @@ public class MaybeFixedTestCase : XunitTestCase, IMaybeFixedTestCase
     public int RetriesBeforeDeemingNoLongerFlaky { get; private set; }
 
     /// <inheritdoc />
-    public override async Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink, IMessageBus messageBus,
-        object[] constructorArguments, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource)
+    public FlakyDisposition FlakyDisposition { get; private set; }
+
+    /// <inheritdoc />
+    public override async Task<RunSummary> RunAsync(
+        IMessageSink diagnosticMessageSink,
+        IMessageBus messageBus,
+        object[] constructorArguments,
+        ExceptionAggregator aggregator,
+        CancellationTokenSource cancellationTokenSource)
     {
         return await RunAsync(this, diagnosticMessageSink, messageBus, cancellationTokenSource,
-            funcRun: bus => new XunitTestCaseRunner(this, DisplayName, SkipReason, constructorArguments,
-                    TestMethodArguments, bus, aggregator, cancellationTokenSource)
-                .RunAsync());
+            funcRun: RunFunc(constructorArguments, aggregator, cancellationTokenSource));
     }
 
     /// <inheritdoc />
@@ -65,13 +71,27 @@ public class MaybeFixedTestCase : XunitTestCase, IMaybeFixedTestCase
         RetriesBeforeDeemingNoLongerFlaky = data.GetValue<int>(nameof(RetriesBeforeDeemingNoLongerFlaky));
     }
 
-    private static async Task<RunSummary> RunAsync(
+    /// <summary>
+    /// Initialize runner and run
+    /// </summary>
+    protected virtual Func<IMessageBus, Task<RunSummary>> RunFunc(
+        object[] constructorArguments,
+        ExceptionAggregator aggregator,
+        CancellationTokenSource cancellationTokenSource)
+    {
+        return bus => new XunitTestCaseRunner(this, DisplayName, SkipReason, constructorArguments,
+                TestMethodArguments, bus, aggregator, cancellationTokenSource)
+            .RunAsync();
+    }
+
+    private async Task<RunSummary> RunAsync(
         IMaybeFixedTestCase testCase,
         IMessageSink diagnosticMessageSink,
         IMessageBus messageBus,
         CancellationTokenSource cancellationTokenSource,
         Func<IMessageBus, Task<RunSummary>> funcRun)
     {
+        FlakyDisposition = FlakyDisposition.Running;
         var attempt = 0;
         while (!cancellationTokenSource.IsCancellationRequested)
         {
@@ -83,7 +103,7 @@ public class MaybeFixedTestCase : XunitTestCase, IMaybeFixedTestCase
 
             RunSummary summary = await funcRun(flakyTestMessageBus);
 
-            if (summary.Failed > 0 || attempt == testCase.RetriesBeforeDeemingNoLongerFlaky - 1)
+            if (summary.Failed > 0 || attempt >= testCase.RetriesBeforeDeemingNoLongerFlaky - 1)
             {
                 if (summary.Failed > 0)
                 {
@@ -92,6 +112,7 @@ public class MaybeFixedTestCase : XunitTestCase, IMaybeFixedTestCase
                         testCase.DisplayName, attempt));
                 }
 
+                FlakyDisposition = summary.Failed > 0 ? FlakyDisposition.Fail : FlakyDisposition.Success;
                 flakyTestMessageBus.Flush();
                 return summary;
             }
@@ -103,13 +124,14 @@ public class MaybeFixedTestCase : XunitTestCase, IMaybeFixedTestCase
         }
 
         // Task was cancelled.
+        FlakyDisposition = FlakyDisposition.Cancelled;
         diagnosticMessageSink.OnMessage(new DiagnosticMessage(
             "The test '{0}' run attempt was cancelled.",
             testCase.DisplayName));
 
         return new RunSummary()
         {
-            Failed = 0,
+            Skipped = 1,
             Total = 1,
         };
     }
