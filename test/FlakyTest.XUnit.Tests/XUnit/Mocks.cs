@@ -8,7 +8,7 @@ using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
-using NullMessageSink = Xunit.NullMessageSink;
+using NullMessageSink = Xunit.Sdk.NullMessageSink;
 using TestMethodDisplay = Xunit.Sdk.TestMethodDisplay;
 using TestMethodDisplayOptions = Xunit.Sdk.TestMethodDisplayOptions;
 
@@ -163,20 +163,6 @@ public static class Mocks
         return Reflector.Wrap(typeof(TClass));
     }
 
-    public static IRunnerReporter RunnerReporter(string? runnerSwitch = null,
-                                                 string? description = null,
-                                                 bool isEnvironmentallyEnabled = false,
-                                                 IMessageSinkWithTypes? messageSink = null)
-    {
-        var result = Substitute.For<IRunnerReporter, InterfaceProxy<IRunnerReporter>>();
-        result.Description.Returns(description ?? "The runner reporter description");
-        result.IsEnvironmentallyEnabled.ReturnsForAnyArgs(isEnvironmentallyEnabled);
-        result.RunnerSwitch.Returns(runnerSwitch);
-        var dualSink = MessageSinkAdapter.Wrap(messageSink ?? Substitute.For<IMessageSinkWithTypes, InterfaceProxy<IMessageSinkWithTypes>>());
-        result.CreateMessageHandler(null).ReturnsForAnyArgs(dualSink);
-        return result;
-    }
-
     public static ITest Test(ITestCase? testCase, string? displayName)
     {
         var result = Substitute.For<ITest, InterfaceProxy<ITest>>();
@@ -213,71 +199,6 @@ public static class Mocks
 
         return new TestAssembly(Reflector.Wrap(assembly ?? typeof(Mocks).GetTypeInfo().Assembly), configFileName);
     }
-
-    // public static ITestAssemblyDiscoveryFinished TestAssemblyDiscoveryFinished(bool diagnosticMessages = false, int toRun = 42, int discovered = 2112)
-    // {
-    //     var assembly = new XunitProjectAssembly { AssemblyFilename = "testAssembly.dll", ConfigFilename = "testAssembly.dll.config" };
-    //     var config = new TestAssemblyConfiguration { DiagnosticMessages = diagnosticMessages, ShadowCopy = true };
-    //     var result = Substitute.For<ITestAssemblyDiscoveryFinished, InterfaceProxy<ITestAssemblyDiscoveryFinished>>();
-    //     result.Assembly.Returns(assembly);
-    //     result.DiscoveryOptions.Returns(TestFrameworkOptions.ForDiscovery(config));
-    //     result.TestCasesDiscovered.Returns(discovered);
-    //     result.TestCasesToRun.Returns(toRun);
-    //     return result;
-    // }
-    //
-    // public static ITestAssemblyDiscoveryStarting TestAssemblyDiscoveryStarting(bool diagnosticMessages = false, bool appDomain = false)
-    // {
-    //     var assembly = new XunitProjectAssembly { AssemblyFilename = "testAssembly.dll", ConfigFilename = "testAssembly.dll.config" };
-    //     var config = new TestAssemblyConfiguration { DiagnosticMessages = diagnosticMessages, MethodDisplay = Xunit.TestMethodDisplay.ClassAndMethod, MaxParallelThreads = 42, ParallelizeTestCollections = true, ShadowCopy = true };
-    //     var result = Substitute.For<ITestAssemblyDiscoveryStarting, InterfaceProxy<ITestAssemblyDiscoveryStarting>>();
-    //     result.AppDomain.Returns(appDomain);
-    //     result.Assembly.Returns(assembly);
-    //     result.DiscoveryOptions.Returns(TestFrameworkOptions.ForDiscovery(config));
-    //     return result;
-    // }
-    //
-    // public static ITestAssemblyExecutionFinished TestAssemblyExecutionFinished(bool diagnosticMessages = false, int total = 2112, int failed = 42, int skipped = 8, int errors = 6, decimal time = 123.456M)
-    // {
-    //     var assembly = new XunitProjectAssembly { AssemblyFilename = "testAssembly.dll", ConfigFilename = "testAssembly.dll.config" };
-    //     var config = new TestAssemblyConfiguration { DiagnosticMessages = diagnosticMessages, ShadowCopy = true };
-    //     var summary = new ExecutionSummary { Total = total, Failed = failed, Skipped = skipped, Errors = errors, Time = time };
-    //     var result = Substitute.For<ITestAssemblyExecutionFinished, InterfaceProxy<ITestAssemblyExecutionFinished>>();
-    //     result.Assembly.Returns(assembly);
-    //     result.ExecutionOptions.Returns(TestFrameworkOptions.ForExecution(config));
-    //     result.ExecutionSummary.Returns(summary);
-    //     return result;
-    // }
-    //
-    // public static ITestAssemblyExecutionStarting TestAssemblyExecutionStarting(bool diagnosticMessages = false, string assemblyFilename = null)
-    // {
-    //     var assembly = new XunitProjectAssembly { AssemblyFilename = assemblyFilename ?? "testAssembly.dll", ConfigFilename = "testAssembly.dll.config" };
-    //     var config = new TestAssemblyConfiguration { DiagnosticMessages = diagnosticMessages, MethodDisplay = Xunit.TestMethodDisplay.ClassAndMethod, MaxParallelThreads = 42, ParallelizeTestCollections = true, ShadowCopy = true };
-    //     var result = Substitute.For<ITestAssemblyExecutionStarting, InterfaceProxy<ITestAssemblyExecutionStarting>>();
-    //     result.Assembly.Returns(assembly);
-    //     result.ExecutionOptions.Returns(TestFrameworkOptions.ForExecution(config));
-    //     return result;
-    // }
-    //
-    // public static ITestAssemblyFinished TestAssemblyFinished(int testsRun = 2112, int testsFailed = 42, int testsSkipped = 6, decimal executionTime = 123.4567M)
-    // {
-    //     var testAssembly = TestAssembly("testAssembly.dll");
-    //     var result = Substitute.For<ITestAssemblyFinished, InterfaceProxy<ITestAssemblyFinished>>();
-    //     result.TestAssembly.Returns(testAssembly);
-    //     result.TestsRun.Returns(testsRun);
-    //     result.TestsFailed.Returns(testsFailed);
-    //     result.TestsSkipped.Returns(testsSkipped);
-    //     result.ExecutionTime.Returns(executionTime);
-    //     return result;
-    // }
-    //
-    // public static ITestAssemblyStarting TestAssemblyStarting()
-    // {
-    //     var testAssembly = TestAssembly("testAssembly.dll");
-    //     var result = Substitute.For<ITestAssemblyStarting, InterfaceProxy<ITestAssemblyStarting>>();
-    //     result.TestAssembly.Returns(testAssembly);
-    //     return result;
-    // }
 
     public static ITestCase TestCase(ITestCollection? collection = null)
     {
