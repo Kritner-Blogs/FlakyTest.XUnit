@@ -41,7 +41,7 @@ public class FlakyTestCaseTests
     public void ShouldSerializeWithExpectedCalls(int retriesBeforeFail)
     {
         var sut = GetSystemUnderTest(retriesBeforeFail);
-        
+
         sut.Serialize(_xunitSerializationInfo.Object);
 
         _xunitSerializationInfo
@@ -70,7 +70,7 @@ public class FlakyTestCaseTests
             .Setup(s => s.QueueMessage(It.IsAny<IMessageSinkMessage>()))
             .Returns(true);
         var messageSink = new Mock<IMessageSink>();
-        
+
         var sut = GetFailTestCase(1, messageSink.Object);
         var runner = new TestableTestCaseRunner<FlakyTestCase>(
             sut,
@@ -86,7 +86,7 @@ public class FlakyTestCaseTests
 
         sut.FlakyDisposition.Should().Be(FlakyDisposition.Fail);
     }
-    
+
     [Fact]
     public async Task ShouldRunAndReportSuccessToDispositionProperty()
     {
@@ -95,7 +95,7 @@ public class FlakyTestCaseTests
             .Setup(s => s.QueueMessage(It.IsAny<IMessageSinkMessage>()))
             .Returns(true);
         var messageSink = new Mock<IMessageSink>();
-        
+
         var sut = GetSuccessTestCase(1, messageSink.Object);
         var runner = new TestableTestCaseRunner<FlakyTestCase>(
             sut,
@@ -111,7 +111,7 @@ public class FlakyTestCaseTests
 
         sut.FlakyDisposition.Should().Be(FlakyDisposition.Success);
     }
-    
+
     [Fact]
     public async Task ShouldRunAndReportCancelledToDispositionProperty()
     {
@@ -138,9 +138,9 @@ public class FlakyTestCaseTests
 
         sut.FlakyDisposition.Should().Be(FlakyDisposition.Cancelled);
     }
-    
+
     private FlakyTestCase GetSystemUnderTest(
-        int retriesBeforeFail = IFlakyAttribute.DefaultRetriesBeforeFail, 
+        int retriesBeforeFail = IFlakyAttribute.DefaultRetriesBeforeFail,
         IMessageSink? messageSink = null)
     {
         return new FlakyTestCase(
@@ -164,7 +164,7 @@ public class FlakyTestCaseTests
             retriesBeforeFail,
             null);
     }
-    
+
     private SuccessFlakyTestCase GetSuccessTestCase(
         int retriesBeforeFail = IFlakyAttribute.DefaultRetriesBeforeFail,
         IMessageSink? messageSink = null)
@@ -177,7 +177,7 @@ public class FlakyTestCaseTests
             retriesBeforeFail,
             null);
     }
-    
+
     private DelayedFlakyTestCase GetDelayedTestCase(
         int retriesBeforeFail = IFlakyAttribute.DefaultRetriesBeforeFail,
         IMessageSink? messageSink = null)

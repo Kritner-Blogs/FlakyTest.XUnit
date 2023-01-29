@@ -24,10 +24,10 @@ public class SuccessFlakyTestCase : FlakyTestCase
         : base(diagnosticMessageSink, defaultMethodDisplay, defaultMethodDisplayOptions, testMethod, retriesBeforeFail, testMethodArguments)
     {
     }
-        
+
     protected override Func<IMessageBus, Task<RunSummary>> RunFunc(object[] constructorArguments, ExceptionAggregator aggregator,
         CancellationTokenSource cancellationTokenSource)
     {
-        return bus => Task.FromResult(new RunSummary() {Total = 1});
+        return bus => Task.FromResult(new RunSummary() { Total = 1 });
     }
 }

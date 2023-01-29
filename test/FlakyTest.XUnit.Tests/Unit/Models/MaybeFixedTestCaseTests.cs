@@ -40,7 +40,7 @@ public class MaybeFixedTestCaseTests
     public void ShouldSerializeWithExpectedCalls(int retriesBeforeFail)
     {
         var sut = GetSystemUnderTest(retriesBeforeFail);
-        
+
         sut.Serialize(_xunitSerializationInfo.Object);
 
         _xunitSerializationInfo
@@ -69,7 +69,7 @@ public class MaybeFixedTestCaseTests
             .Setup(s => s.QueueMessage(It.IsAny<IMessageSinkMessage>()))
             .Returns(true);
         var messageSink = new Mock<IMessageSink>();
-        
+
         var sut = GetFailTestCase(1, messageSink.Object);
         var runner = new TestableTestCaseRunner<MaybeFixedTestCase>(
             sut,
@@ -85,7 +85,7 @@ public class MaybeFixedTestCaseTests
 
         sut.FlakyDisposition.Should().Be(FlakyDisposition.Fail);
     }
-    
+
     [Fact]
     public async Task ShouldRunAndReportSuccessToDispositionProperty()
     {
@@ -94,7 +94,7 @@ public class MaybeFixedTestCaseTests
             .Setup(s => s.QueueMessage(It.IsAny<IMessageSinkMessage>()))
             .Returns(true);
         var messageSink = new Mock<IMessageSink>();
-        
+
         var sut = GetSuccessTestCase(1, messageSink.Object);
         var runner = new TestableTestCaseRunner<MaybeFixedTestCase>(
             sut,
@@ -110,7 +110,7 @@ public class MaybeFixedTestCaseTests
 
         sut.FlakyDisposition.Should().Be(FlakyDisposition.Success);
     }
-    
+
     [Fact]
     public async Task ShouldRunAndReportCancelledToDispositionProperty()
     {
@@ -137,9 +137,9 @@ public class MaybeFixedTestCaseTests
 
         sut.FlakyDisposition.Should().Be(FlakyDisposition.Cancelled);
     }
-    
+
     private MaybeFixedTestCase GetSystemUnderTest(
-        int defaultRetriesBeforeDeemingNoLongerFlaky = IMaybeFixedAttribute.DefaultRetriesBeforeDeemingNoLongerFlaky, 
+        int defaultRetriesBeforeDeemingNoLongerFlaky = IMaybeFixedAttribute.DefaultRetriesBeforeDeemingNoLongerFlaky,
         IMessageSink? messageSink = null)
     {
         return new MaybeFixedTestCase(
@@ -163,7 +163,7 @@ public class MaybeFixedTestCaseTests
             defaultRetriesBeforeDeemingNoLongerFlaky,
             null);
     }
-    
+
     private SuccessMaybeFixedTestCase GetSuccessTestCase(
         int defaultRetriesBeforeDeemingNoLongerFlaky = IMaybeFixedAttribute.DefaultRetriesBeforeDeemingNoLongerFlaky,
         IMessageSink? messageSink = null)
@@ -176,7 +176,7 @@ public class MaybeFixedTestCaseTests
             defaultRetriesBeforeDeemingNoLongerFlaky,
             null);
     }
-    
+
     private DelayedMaybeFixedTestCase GetDelayedTestCase(
         int defaultRetriesBeforeDeemingNoLongerFlaky = IMaybeFixedAttribute.DefaultRetriesBeforeDeemingNoLongerFlaky,
         IMessageSink? messageSink = null)

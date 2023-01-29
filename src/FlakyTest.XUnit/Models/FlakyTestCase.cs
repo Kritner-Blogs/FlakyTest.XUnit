@@ -19,7 +19,7 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
     /// Message template string for running a test attempt
     /// </summary>
     public const string MessageTemplateRunningTestAttemptOf = "Running test '{0}'.  Attempt {1} of {2}";
-    
+
     /// <summary>
     /// Message template string for a failed test case 
     /// </summary>
@@ -55,10 +55,10 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
 
     /// <inheritdoc />
     public override async Task<RunSummary> RunAsync(
-        IMessageSink diagnosticMessageSink, 
+        IMessageSink diagnosticMessageSink,
         IMessageBus messageBus,
-        object[] constructorArguments, 
-        ExceptionAggregator aggregator, 
+        object[] constructorArguments,
+        ExceptionAggregator aggregator,
         CancellationTokenSource cancellationTokenSource)
     {
         return await RunAsync(this, diagnosticMessageSink, messageBus, cancellationTokenSource,
@@ -86,7 +86,7 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
     /// </summary>
     protected virtual Func<IMessageBus, Task<RunSummary>> RunFunc(
         object[] constructorArguments,
-        ExceptionAggregator aggregator, 
+        ExceptionAggregator aggregator,
         CancellationTokenSource cancellationTokenSource)
     {
         return bus => new XunitTestCaseRunner(this, DisplayName, SkipReason, constructorArguments,

@@ -618,7 +618,7 @@ public static class Mocks
         foreach (var traitAttribute in method.GetCustomAttributes(typeof(TraitAttribute)))
         {
             var ctorArgs = traitAttribute.GetConstructorArguments().ToList();
-            result.Add((string)ctorArgs[0], new List<string>() {(string)ctorArgs[1]});
+            result.Add((string)ctorArgs[0], new List<string>() { (string)ctorArgs[1] });
         }
 
         return result;

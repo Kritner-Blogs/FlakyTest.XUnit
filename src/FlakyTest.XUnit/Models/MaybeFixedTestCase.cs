@@ -45,10 +45,10 @@ public class MaybeFixedTestCase : XunitTestCase, IMaybeFixedTestCase
 
     /// <inheritdoc />
     public override async Task<RunSummary> RunAsync(
-        IMessageSink diagnosticMessageSink, 
+        IMessageSink diagnosticMessageSink,
         IMessageBus messageBus,
-        object[] constructorArguments, 
-        ExceptionAggregator aggregator, 
+        object[] constructorArguments,
+        ExceptionAggregator aggregator,
         CancellationTokenSource cancellationTokenSource)
     {
         return await RunAsync(this, diagnosticMessageSink, messageBus, cancellationTokenSource,
@@ -70,13 +70,13 @@ public class MaybeFixedTestCase : XunitTestCase, IMaybeFixedTestCase
 
         RetriesBeforeDeemingNoLongerFlaky = data.GetValue<int>(nameof(RetriesBeforeDeemingNoLongerFlaky));
     }
-    
+
     /// <summary>
     /// Initialize runner and run
     /// </summary>
     protected virtual Func<IMessageBus, Task<RunSummary>> RunFunc(
         object[] constructorArguments,
-        ExceptionAggregator aggregator, 
+        ExceptionAggregator aggregator,
         CancellationTokenSource cancellationTokenSource)
     {
         return bus => new XunitTestCaseRunner(this, DisplayName, SkipReason, constructorArguments,

@@ -24,14 +24,14 @@ public class DelayedMaybeFixedTestCase : MaybeFixedTestCase
         : base(diagnosticMessageSink, defaultMethodDisplay, defaultMethodDisplayOptions, testMethod, retriesBeforeFail, testMethodArguments)
     {
     }
-        
+
     protected override Func<IMessageBus, Task<RunSummary>> RunFunc(object[] constructorArguments, ExceptionAggregator aggregator,
         CancellationTokenSource cancellationTokenSource)
     {
         return async bus =>
         {
             await Task.Delay(10_000);
-            return new RunSummary() {Total = 1, Failed = 1};
+            return new RunSummary() { Total = 1, Failed = 1 };
         };
     }
 }
