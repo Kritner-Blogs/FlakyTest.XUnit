@@ -7,7 +7,6 @@ using Moq;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
-using DiagnosticMessage = Xunit.Sdk.DiagnosticMessage;
 using NullMessageSink = Xunit.Sdk.NullMessageSink;
 using TestMethodDisplay = Xunit.Sdk.TestMethodDisplay;
 using TestMethodDisplayOptions = Xunit.Sdk.TestMethodDisplayOptions;
@@ -15,14 +14,14 @@ using TestMethodDisplayOptions = Xunit.Sdk.TestMethodDisplayOptions;
 namespace FlakyTest.XUnit.Tests.Unit.Models;
 
 /// <summary>
-/// Unit tests against <see cref="FlakyTestCase"/>
+/// Unit tests against <see cref="MaybeFixedTestCase"/>
 /// </summary>
-public class FlakyTestCaseTests
+public class MaybeFixedTestCaseTests
 {
     private readonly Mock<IXunitSerializationInfo> _xunitSerializationInfo = new();
     private readonly ITestMethod _testMethod = Mocks.TestMethod("MockType", "MockMethod");
 
-    public FlakyTestCaseTests()
+    public MaybeFixedTestCaseTests()
     {
         _xunitSerializationInfo
             .Setup(s => s.GetValue<string>("DefaultMethodDisplay"))
@@ -46,7 +45,7 @@ public class FlakyTestCaseTests
 
         _xunitSerializationInfo
             .Verify(v =>
-                    v.AddValue(nameof(FlakyTestCase.RetriesBeforeFail), retriesBeforeFail, null),
+                    v.AddValue(nameof(MaybeFixedTestCase.RetriesBeforeDeemingNoLongerFlaky), retriesBeforeFail, null),
                 Times.Once);
     }
 
@@ -59,7 +58,7 @@ public class FlakyTestCaseTests
 
         _xunitSerializationInfo
             .Verify(v =>
-                v.GetValue<int>(nameof(FlakyTestCase.RetriesBeforeFail)), Times.Once);
+                v.GetValue<int>(nameof(MaybeFixedTestCase.RetriesBeforeDeemingNoLongerFlaky)), Times.Once);
     }
 
     [Fact]
@@ -72,7 +71,7 @@ public class FlakyTestCaseTests
         var messageSink = new Mock<IMessageSink>();
         
         var sut = GetFailTestCase(1, messageSink.Object);
-        var runner = new TestableTestCaseRunner<FlakyTestCase>(
+        var runner = new TestableTestCaseRunner<MaybeFixedTestCase>(
             sut,
             messageSink.Object,
             messageBus.Object,
@@ -97,7 +96,7 @@ public class FlakyTestCaseTests
         var messageSink = new Mock<IMessageSink>();
         
         var sut = GetSuccessTestCase(1, messageSink.Object);
-        var runner = new TestableTestCaseRunner<FlakyTestCase>(
+        var runner = new TestableTestCaseRunner<MaybeFixedTestCase>(
             sut,
             messageSink.Object,
             messageBus.Object,
@@ -123,7 +122,7 @@ public class FlakyTestCaseTests
 
         var tokenSource = new CancellationTokenSource();
         var sut = GetDelayedTestCase(1, messageSink.Object);
-        var runner = new TestableTestCaseRunner<FlakyTestCase>(
+        var runner = new TestableTestCaseRunner<MaybeFixedTestCase>(
             sut,
             messageSink.Object,
             messageBus.Object,
@@ -139,55 +138,55 @@ public class FlakyTestCaseTests
         sut.FlakyDisposition.Should().Be(FlakyDisposition.Cancelled);
     }
     
-    private FlakyTestCase GetSystemUnderTest(
-        int retriesBeforeFail = IFlakyAttribute.DefaultRetriesBeforeFail, 
+    private MaybeFixedTestCase GetSystemUnderTest(
+        int defaultRetriesBeforeDeemingNoLongerFlaky = IMaybeFixedAttribute.DefaultRetriesBeforeDeemingNoLongerFlaky, 
         IMessageSink? messageSink = null)
     {
-        return new FlakyTestCase(
+        return new MaybeFixedTestCase(
             messageSink ?? new NullMessageSink(),
             TestMethodDisplay.Method,
             TestMethodDisplayOptions.All,
             _testMethod,
-            retriesBeforeFail,
+            defaultRetriesBeforeDeemingNoLongerFlaky,
             null);
     }
 
-    private FailFlakyTestCase GetFailTestCase(
-        int retriesBeforeFail = IFlakyAttribute.DefaultRetriesBeforeFail,
+    private FailMaybeFixedTestCase GetFailTestCase(
+        int defaultRetriesBeforeDeemingNoLongerFlaky = IMaybeFixedAttribute.DefaultRetriesBeforeDeemingNoLongerFlaky,
         IMessageSink? messageSink = null)
     {
-        return new FailFlakyTestCase(
+        return new FailMaybeFixedTestCase(
             messageSink ?? new NullMessageSink(),
             TestMethodDisplay.Method,
             TestMethodDisplayOptions.All,
             _testMethod,
-            retriesBeforeFail,
+            defaultRetriesBeforeDeemingNoLongerFlaky,
             null);
     }
     
-    private SuccessFlakyTestCase GetSuccessTestCase(
-        int retriesBeforeFail = IFlakyAttribute.DefaultRetriesBeforeFail,
+    private SuccessMaybeFixedTestCase GetSuccessTestCase(
+        int defaultRetriesBeforeDeemingNoLongerFlaky = IMaybeFixedAttribute.DefaultRetriesBeforeDeemingNoLongerFlaky,
         IMessageSink? messageSink = null)
     {
-        return new SuccessFlakyTestCase(
+        return new SuccessMaybeFixedTestCase(
             messageSink ?? new NullMessageSink(),
             TestMethodDisplay.Method,
             TestMethodDisplayOptions.All,
             _testMethod,
-            retriesBeforeFail,
+            defaultRetriesBeforeDeemingNoLongerFlaky,
             null);
     }
     
-    private DelayedFlakyTestCase GetDelayedTestCase(
-        int retriesBeforeFail = IFlakyAttribute.DefaultRetriesBeforeFail,
+    private DelayedMaybeFixedTestCase GetDelayedTestCase(
+        int defaultRetriesBeforeDeemingNoLongerFlaky = IMaybeFixedAttribute.DefaultRetriesBeforeDeemingNoLongerFlaky,
         IMessageSink? messageSink = null)
     {
-        return new DelayedFlakyTestCase(
+        return new DelayedMaybeFixedTestCase(
             messageSink ?? new NullMessageSink(),
             TestMethodDisplay.Method,
             TestMethodDisplayOptions.All,
             _testMethod,
-            retriesBeforeFail,
+            defaultRetriesBeforeDeemingNoLongerFlaky,
             null);
     }
 }

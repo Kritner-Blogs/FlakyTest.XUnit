@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using FlakyTest.XUnit.Enums;
 using FlakyTest.XUnit.Interfaces;
 using FlakyTest.XUnit.Services;
 using Xunit.Abstractions;
@@ -14,6 +15,16 @@ namespace FlakyTest.XUnit.Models;
 [Serializable]
 public class FlakyTestCase : XunitTestCase, IFlakyTestCase
 {
+    /// <summary>
+    /// Message template string for running a test attempt
+    /// </summary>
+    public const string MessageTemplateRunningTestAttemptOf = "Running test '{0}'.  Attempt {1} of {2}";
+    
+    /// <summary>
+    /// Message template string for a failed test case 
+    /// </summary>
+    public const string MessageTemplateTestReportsFailureAfterAttempts = "The test '{0}' reports failure after {1} attempts.";
+
     /// <summary>
     /// This constructor should not be used.
     /// </summary>
@@ -40,13 +51,18 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
     public int RetriesBeforeFail { get; private set; }
 
     /// <inheritdoc />
-    public override async Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink, IMessageBus messageBus,
-        object[] constructorArguments, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource)
+    public FlakyDisposition FlakyDisposition { get; private set; }
+
+    /// <inheritdoc />
+    public override async Task<RunSummary> RunAsync(
+        IMessageSink diagnosticMessageSink, 
+        IMessageBus messageBus,
+        object[] constructorArguments, 
+        ExceptionAggregator aggregator, 
+        CancellationTokenSource cancellationTokenSource)
     {
         return await RunAsync(this, diagnosticMessageSink, messageBus, cancellationTokenSource,
-            funcRun: bus => new XunitTestCaseRunner(this, DisplayName, SkipReason, constructorArguments,
-                    TestMethodArguments, bus, aggregator, cancellationTokenSource)
-                .RunAsync());
+            funcRun: RunFunc(constructorArguments, aggregator, cancellationTokenSource));
     }
 
     /// <inheritdoc />
@@ -65,34 +81,49 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
         RetriesBeforeFail = data.GetValue<int>(nameof(RetriesBeforeFail));
     }
 
-    private static async Task<RunSummary> RunAsync(
+    /// <summary>
+    /// Initialize runner and run
+    /// </summary>
+    protected virtual Func<IMessageBus, Task<RunSummary>> RunFunc(
+        object[] constructorArguments,
+        ExceptionAggregator aggregator, 
+        CancellationTokenSource cancellationTokenSource)
+    {
+        return bus => new XunitTestCaseRunner(this, DisplayName, SkipReason, constructorArguments,
+                TestMethodArguments, bus, aggregator, cancellationTokenSource)
+            .RunAsync();
+    }
+
+    private async Task<RunSummary> RunAsync(
         IFlakyTestCase testCase,
         IMessageSink diagnosticMessageSink,
         IMessageBus messageBus,
         CancellationTokenSource cancellationTokenSource,
         Func<IMessageBus, Task<RunSummary>> funcRun)
     {
+        FlakyDisposition = FlakyDisposition.Running;
         var attempt = 0;
         while (!cancellationTokenSource.IsCancellationRequested)
         {
             using var flakyTestMessageBus = new FlakyMessageBus(messageBus);
             attempt++;
             diagnosticMessageSink.OnMessage(new DiagnosticMessage(
-                "Running test '{0}'.  Attempt {1} of {2}",
+                MessageTemplateRunningTestAttemptOf,
                 testCase.DisplayName, attempt, testCase.RetriesBeforeFail));
 
             RunSummary summary = await funcRun(flakyTestMessageBus);
 
             // If we have a passing test, or we've attempted (and failed) the maximum retries, return a result.
-            if (summary.Failed == 0 || attempt == testCase.RetriesBeforeFail)
+            if (summary.Failed == 0 || attempt >= testCase.RetriesBeforeFail)
             {
                 if (summary.Failed > 0)
                 {
                     diagnosticMessageSink.OnMessage(new DiagnosticMessage(
-                        "The test '{0}' reports failure after {1} attempts.",
+                        MessageTemplateTestReportsFailureAfterAttempts,
                         testCase.DisplayName, attempt));
                 }
 
+                FlakyDisposition = summary.Failed > 0 ? FlakyDisposition.Fail : FlakyDisposition.Success;
                 flakyTestMessageBus.Flush();
                 return summary;
             }
@@ -105,13 +136,14 @@ public class FlakyTestCase : XunitTestCase, IFlakyTestCase
         }
 
         // Task was cancelled.
+        FlakyDisposition = FlakyDisposition.Cancelled;
         diagnosticMessageSink.OnMessage(new DiagnosticMessage(
             "The test '{0}' run attempt was cancelled.",
             testCase.DisplayName));
 
         return new RunSummary()
         {
-            Failed = 1,
+            Skipped = 1,
             Total = 1,
         };
     }

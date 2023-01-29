@@ -1,4 +1,5 @@
-﻿using Xunit.Sdk;
+﻿using FlakyTest.XUnit.Enums;
+using Xunit.Sdk;
 
 namespace FlakyTest.XUnit.Interfaces;
 
@@ -11,4 +12,9 @@ public interface IMaybeFixedTestCase : IXunitTestCase
     /// The number of successful runs of the test to "pass" and consider no longer flaky.
     /// </summary>
     int RetriesBeforeDeemingNoLongerFlaky { get; }
+    
+    /// <summary>
+    /// The status of the test.
+    /// </summary>
+    FlakyDisposition FlakyDisposition { get; }
 }

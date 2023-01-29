@@ -8,6 +8,7 @@ using NSubstitute;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
+using NullMessageSink = Xunit.NullMessageSink;
 using TestMethodDisplay = Xunit.Sdk.TestMethodDisplay;
 using TestMethodDisplayOptions = Xunit.Sdk.TestMethodDisplayOptions;
 
@@ -162,19 +163,19 @@ public static class Mocks
         return Reflector.Wrap(typeof(TClass));
     }
 
-    // public static IRunnerReporter RunnerReporter(string runnerSwitch = null,
-    //                                              string description = null,
-    //                                              bool isEnvironmentallyEnabled = false,
-    //                                              IMessageSinkWithTypes messageSink = null)
-    // {
-    //     var result = Substitute.For<IRunnerReporter, InterfaceProxy<IRunnerReporter>>();
-    //     result.Description.Returns(description ?? "The runner reporter description");
-    //     result.IsEnvironmentallyEnabled.ReturnsForAnyArgs(isEnvironmentallyEnabled);
-    //     result.RunnerSwitch.Returns(runnerSwitch);
-    //     var dualSink = MessageSinkAdapter.Wrap(messageSink ?? Substitute.For<IMessageSinkWithTypes, InterfaceProxy<IMessageSinkWithTypes>>());
-    //     result.CreateMessageHandler(null).ReturnsForAnyArgs(dualSink);
-    //     return result;
-    // }
+    public static IRunnerReporter RunnerReporter(string? runnerSwitch = null,
+                                                 string? description = null,
+                                                 bool isEnvironmentallyEnabled = false,
+                                                 IMessageSinkWithTypes? messageSink = null)
+    {
+        var result = Substitute.For<IRunnerReporter, InterfaceProxy<IRunnerReporter>>();
+        result.Description.Returns(description ?? "The runner reporter description");
+        result.IsEnvironmentallyEnabled.ReturnsForAnyArgs(isEnvironmentallyEnabled);
+        result.RunnerSwitch.Returns(runnerSwitch);
+        var dualSink = MessageSinkAdapter.Wrap(messageSink ?? Substitute.For<IMessageSinkWithTypes, InterfaceProxy<IMessageSinkWithTypes>>());
+        result.CreateMessageHandler(null).ReturnsForAnyArgs(dualSink);
+        return result;
+    }
 
     public static ITest Test(ITestCase? testCase, string? displayName)
     {
