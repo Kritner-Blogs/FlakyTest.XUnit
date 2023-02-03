@@ -10,7 +10,7 @@
 
 Do you have some flaky tests? Are you using XUnit? Do you want to retry your flaky tests a few times before considering them failures? Heck yeah brother! (You should probably actually fix the test so it's not flaky, but sometimes you just don't have time!)
 
-If you still want an easy way to mark a test or two (but no more than that!) as flaky, then this might be the package for you.
+If you still want an easy way to mark a test or two (but no more than that!) as flaky, then this might be the package for you.  What does marking a test as flaky do?  Well, it will attempt to run the test up to `n` times.  If any test run between `{0..n}` passes, then the test is considered a passing test.  If all tests fail between `{0..n}` then and only then is the test considered a failing test.  Marking a test as flaky *can help* alleviate transient pipeline failures, where you know that the test *mostly* passes, there's just something you haven't found in the test itself that makes it not pass all the time.
 
 ## Usage
 
@@ -44,11 +44,11 @@ The second parameter indicates how many times the test can "fail" before the tes
 
 ### `MaybeFixedFact` / `MaybeFixedTheory`
 
-Did you have a test your were previously decorating as `Flaky`? Have you made updates to the code or test and want to check that it's no longer flaky? Well the attributes `MaybeFixedFact` and `MaybeFixedTheory` may be for you!
+Did you have a test you were previously decorating as `Flaky`? Have you made updates to the code or test and want to check that it's no longer flaky? Well the attributes `MaybeFixedFact` and `MaybeFixedTheory` may be for you!
 
-Use these attributes to signal to the test runner that the tests decorated as such should be run `x` times to consider them "successful".
+Use these attributes to signal to the test runner that the tests decorated as such should be run `n` times (and pass each of those times) to be considered  "successful".
 
-If `x` is 10, the test will be run up to 10x. The runner will bail early if a failure is encountered up to `x`, once `x` is arrived at with _all_ passing tests, the test is considered an overall disposition of "passed". This `x` value is configurable, but is 10 by default (at the time of writing this documentation anyway).
+If `n` is 10, the test will be run up to 10x. The runner will bail early if a failure is encountered up to `n`, once `n` is arrived at with _all_ passing tests, the test is considered an overall disposition of "passed". This `n` value is configurable, but is 10 by default (at the time of writing this documentation anyway).
 
 #### Example
 
@@ -71,3 +71,9 @@ public async Task WhenDoingThing_ShouldHaveThisResult(bool isDoots)
    // your test implementation which was sometimes flaky
 }
 ```
+
+## Where these attributes won't work
+
+`FlakyFact` and `FlakyTheory` are only meant to be used as stopgaps until a time in which the test issue can be diagnosed and fixed.  In some cases, depending on how exactly your test class, and test itself is set up, these attributes may not work for getting a "passing" flaky test.
+
+How can this happen?  If you have a test that modifies state in such a way that the "starting state/data" for the test is different after a failed execution and attempt at rerun, it's likely you'll not be able to make successful use of the flaky attributes. 
