@@ -12,6 +12,7 @@
   },
   "release": {
     "branchName": "RELEASE/v{version}",
+    "versionIncrement" : "build",
     "firstUnstableTag": "prerelease"
   }
 }
